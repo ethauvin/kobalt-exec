@@ -68,7 +68,7 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
 
         if (config != null) {
             config.commandLines.forEach {
-                log(2, "Executing: '" + { it.args.joinToString { " " } } + "' in '{$it.dir}'")
+                log(2, "Executing: '" + it.args.joinToString(" ") + "' in '${it.dir}'")
                 success = true
             }
         }
