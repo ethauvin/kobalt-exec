@@ -4,6 +4,8 @@ import com.beust.kobalt.plugin.application.*
 import com.beust.kobalt.plugin.java.*
 import net.thauvin.erik.kobalt.plugin.exec.*
 
+val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.1.jar"))
+
 val p = project {
 
     name = "example"
@@ -20,7 +22,6 @@ val p = project {
     }
 
     dependencies {
-        compile(file("../kobaltBuild/libs/kobalt-exec-0.1.jar"))
     }
 
     dependenciesTest {
@@ -33,5 +34,9 @@ val p = project {
 
     application {
         mainClass = "com.example.Main"
+    }
+
+    exec {
+        commandLine(args = arrayOf("ls"))
     }
 }
