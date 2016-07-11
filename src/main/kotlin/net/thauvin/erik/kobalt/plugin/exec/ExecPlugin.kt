@@ -38,7 +38,6 @@ import com.beust.kobalt.api.annotation.Task
 import com.beust.kobalt.misc.log
 
 class ExecPlugin : BasePlugin(), ITaskContributor {
-
     // ITaskContributor
     override fun tasksFor(project: Project, context: KobaltContext): List<DynamicTask> {
         return emptyList()
@@ -70,7 +69,7 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
 
                     }
                 }
-                log(2, "Executing: '" + { it.args.joinToString { " " } } + "' in '$dir'")
+                log(2, "Executing: '" + it.args.joinToString(" ") + "' in '$dir'")
                 success = true
             }
         }
