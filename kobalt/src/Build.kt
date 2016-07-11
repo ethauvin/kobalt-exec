@@ -4,7 +4,7 @@ import com.beust.kobalt.repos
 
 val repos = repos()
 
-val dev = true
+val dev = false
 val kobaltDependency = if (dev) "kobalt" else "kobalt-plugin-api"
 
 val p = project {
@@ -23,7 +23,7 @@ val p = project {
     }
 
     dependencies {
-        compile("com.beust:$kobaltDependency:0.725")
+        compile("com.beust:$kobaltDependency:0.842")
     }
 
     dependenciesTest {

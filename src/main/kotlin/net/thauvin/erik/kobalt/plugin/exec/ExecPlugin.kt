@@ -39,12 +39,14 @@ import com.beust.kobalt.misc.log
 
 class ExecPlugin : BasePlugin(), ITaskContributor {
 
+/*
     fun main(argv: Array<String>) {
         com.beust.kobalt.main(argv)
     }
+*/
 
     // ITaskContributor
-    override fun tasksFor(context: KobaltContext): List<DynamicTask> {
+    override fun tasksFor(project: Project, context: KobaltContext): List<DynamicTask> {
         return emptyList()
     }
 
