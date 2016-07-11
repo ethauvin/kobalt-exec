@@ -62,7 +62,15 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
 
         if (config != null) {
             config.commandLines.forEach {
-                log(2, "Executing: '" + { it.args.joinToString { " " } } + "' in '{$it.dir}'")
+                val dir = if (it.dir.isNullOrBlank()) project.directory else it.dir
+                var execute = (it.os.size == 0)
+                if (!execute) {
+                    val curOs: String = System.getProperty("os.name")
+                    it.os.forEach {
+
+                    }
+                }
+                log(2, "Executing: '" + { it.args.joinToString { " " } } + "' in '$dir'")
                 success = true
             }
         }
@@ -76,14 +84,14 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
     }
 }
 
-data class CommandLine(var os: String = "", var dir: String = "", var args: Array<String> = emptyArray())
+data class CommandLine(var args: Array<String> = emptyArray(), var dir: String = "", var os: Array<String> = emptyArray())
 
 data class ExecConfig(val project: Project) {
     val commandLines = arrayListOf<CommandLine>()
 
     @Directive
-    public fun commandLine(os: String = "", dir: String = "", args: Array<String> = emptyArray()) {
-        if (args.size > 0) commandLines.add(CommandLine(os, dir, args))
+    public fun commandLine(args: Array<String> = emptyArray(), dir: String = "", os: Array<String> = emptyArray()) {
+        if (args.size > 0) commandLines.add(CommandLine(args, dir, os))
     }
 }
 
