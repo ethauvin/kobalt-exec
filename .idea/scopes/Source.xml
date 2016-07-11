@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Source" pattern="file[kobalt-exec]:src/main/kotlin//*||file[kobalt-exec]:src/test/kotlin//*" />
+</component>

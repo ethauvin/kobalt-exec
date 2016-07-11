@@ -1,0 +1,6 @@
+<kobalt-plugin>
+    <name>kobalt-exec</name>
+    <plugin-actors>
+        <class-name>net.thauvin.erik.kobalt.plugin.exec.ExecPlugin</class-name>
+    </plugin-actors>
+</kobalt-plugin>
