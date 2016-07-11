@@ -16,36 +16,18 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
-      <library name="Kobalt: com.beust:kobalt:jar:0.725">
+      <library name="Kobalt: com.beust:kobalt-plugin-api:jar:0.842">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/repository/com/beust/kobalt/0.725/kobalt-0.725.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/repository/com/beust/kobalt-plugin-api/0.842/kobalt-plugin-api-0.842.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
-      <library name="Kobalt: org.testng:testng:jar:(0,]">
+      <library name="Kobalt: org.apache.ant:ant:jar:1.7.0">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/repository/org/testng/testng/6.9.12/testng-6.9.12.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library name="Kobalt: org.apache.ant:ant-launcher:jar:1.7.0">
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/repository/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library name="Kobalt: org.beanshell:bsh:jar:2.0b4">
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/repository/org/beanshell/bsh/2.0b4/bsh-2.0b4.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/repository/org/apache/ant/ant/1.7.0/ant-1.7.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -61,9 +43,27 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
-      <library name="Kobalt: org.apache.ant:ant:jar:1.7.0">
+      <library name="Kobalt: org.beanshell:bsh:jar:2.0b4">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/repository/org/apache/ant/ant/1.7.0/ant-1.7.0.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/repository/org/beanshell/bsh/2.0b4/bsh-2.0b4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library name="Kobalt: org.apache.ant:ant-launcher:jar:1.7.0">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.kobalt/repository/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library name="Kobalt: org.testng:testng:jar:(0,]">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.kobalt/repository/org/testng/testng/6.9.12/testng-6.9.12.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

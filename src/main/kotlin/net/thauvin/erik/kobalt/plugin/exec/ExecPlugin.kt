@@ -39,12 +39,6 @@ import com.beust.kobalt.misc.log
 
 class ExecPlugin : BasePlugin(), ITaskContributor {
 
-/*
-    fun main(argv: Array<String>) {
-        com.beust.kobalt.main(argv)
-    }
-*/
-
     // ITaskContributor
     override fun tasksFor(project: Project, context: KobaltContext): List<DynamicTask> {
         return emptyList()
@@ -52,18 +46,18 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
 
 
     companion object {
-        const val NAME: String = "kobalt-exec"
+        const val NAME: String = "Exec"
     }
 
     override val name = NAME
 
-    @Task(name = "exec", description = "Executes a command line process.")
+    @Task(name = "exec", description = "Execute a command line process.")
     fun taskExec(project: Project): TaskResult {
         return executeCommands(project)
     }
 
     private fun executeCommands(project: Project): TaskResult {
-        var success = false
+        var success = true
         val config = configs[project.name]
 
         if (config != null) {

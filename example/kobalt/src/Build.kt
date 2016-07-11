@@ -2,7 +2,7 @@ import com.beust.kobalt.*
 import com.beust.kobalt.plugin.packaging.*
 import com.beust.kobalt.plugin.application.*
 import com.beust.kobalt.plugin.java.*
-//import net.thauvin.erik.kobalt.plugin.exec.*
+import net.thauvin.erik.kobalt.plugin.exec.*
 
 val p = project {
 
@@ -20,7 +20,7 @@ val p = project {
     }
 
     dependencies {
-        compile(file("../libs/kobalt-exec-0.1.jar"))
+        compile(file("../kobaltBuild/libs/kobalt-exec-0.1.jar"))
     }
 
     dependenciesTest {
