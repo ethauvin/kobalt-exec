@@ -37,6 +37,7 @@ val p = project {
     }
 
     exec {
-        commandLine(args = arrayOf("ls"))
+        commandLine(args = arrayOf("ls", "-- a"), dir = "../libs", fail = arrayOf(Fail.EXIT))
+		commandLine(arrayOf("cmd", "/c", "echo", "Test"), os = arrayOf("Win"), fail = arrayOf(Fail.STDERR))
     }
 }
