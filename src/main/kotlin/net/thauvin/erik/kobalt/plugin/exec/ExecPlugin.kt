@@ -83,21 +83,23 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
                         pb.directory(loc)
                         val proc = pb.start()
                         val err = proc.waitFor(30, TimeUnit.SECONDS)
-                        val stdin = if (proc.inputStream.available() > 0) fromStream(proc.inputStream) else listOf()
-                        val stderr = if (proc.errorStream.available() > 0) fromStream(proc.errorStream) else listOf()
+                        val stdout = if (proc.inputStream.available() > 0) fromStream(proc.inputStream) else emptyList()
+                        val stderr = if (proc.errorStream.available() > 0) fromStream(proc.errorStream) else emptyList()
+
+                        val errMsg = "Program \"" + it.args.joinToString(" ") + "\" (in directory \"$dir\"): "
 
                         if (err == false) {
-                            error("Cannot run program \"" + it.args.joinToString(" ")
-                                    + "\" (in directory \"$dir\"): TIMEOUT")
-                        } else if (it.fail.contains(Fail.EXIT) && proc.exitValue() > 0) {
-                            error("Program \"" + it.args.joinToString(" ")
-                                    + "\" (in directory \"$dir\"): EXIT ${proc.exitValue()}")
-                        } else if (it.fail.contains(Fail.STDERR) && stderr.isNotEmpty()) {
-                            error("Program \"" + it.args.joinToString(" ") + "\" (in directory \"$dir\"): STDERR, "
-                                    + stderr[0] + "...")
-                        } else if (it.fail.contains(Fail.STDIN) && stdin.isNotEmpty()) {
-                            error("Program \"" + it.args.joinToString(" ") + "\" (in directory \"$dir\"): STDIN, "
-                                    + stdin[0] + "...")
+                            error(errMsg + "TIMEOUT")
+                        } else if (it.fail.isNotEmpty()) {
+                            val all = it.fail.contains(Fail.ALL)
+                            val output = it.fail.contains(Fail.OUTPUT)
+                            if ((all || it.fail.contains(Fail.EXIT)) && proc.exitValue() > 0) {
+                                error(errMsg + "EXIT ${proc.exitValue()}")
+                            } else if ((all || output || it.fail.contains(Fail.STDERR)) && stderr.isNotEmpty()) {
+                                error(errMsg + "STDERR, " + stderr[0])
+                            } else if ((all || output || it.fail.contains(Fail.STDOUT)) && stdout.isNotEmpty()) {
+                                error(errMsg + "STDOUT, " + stdout[0])
+                            }
                         }
 
                         success = true
@@ -133,18 +135,18 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
 }
 
 enum class Fail() {
-    STDERR, STDIN, EXIT
+    ALL, STDERR, STDOUT, OUTPUT, EXIT
 }
 
-data class CommandLine(var args: Array<String> = emptyArray(), var dir: String = "",
-                       var os: Array<String> = emptyArray(), var fail: Array<Fail> = emptyArray())
+data class CommandLine(var args: List<String> = emptyList(), var dir: String = "",
+                       var os: List<String> = emptyList(), var fail: Set<Fail> = emptySet())
 
 data class ExecConfig(val project: Project) {
     val commandLines = arrayListOf<CommandLine>()
 
     @Directive
-    public fun commandLine(args: Array<String> = emptyArray(), dir: String = "", os: Array<String> = emptyArray(),
-                           fail: Array<Fail> = emptyArray()) {
+    public fun commandLine(args: List<String> = emptyList(), dir: String = "", os: List<String> = emptyList(),
+                           fail: Set<Fail> = emptySet()) {
         if (args.size > 0) commandLines.add(CommandLine(args, dir, os, fail))
     }
 }
