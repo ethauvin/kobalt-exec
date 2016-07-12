@@ -22,6 +22,7 @@ val p = project {
     pom = Model().apply {
         name = project.name
         description = "Command line execution plugin for the Kobalt build system"
+		version = project.version
         url = "https://github.com/ethauvin/kobalt-exec"
         licenses = listOf(License().apply {
             name = "BSD 3-Clause"
