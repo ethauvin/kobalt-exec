@@ -36,6 +36,11 @@ import com.beust.kobalt.api.*
 import com.beust.kobalt.api.annotation.Directive
 import com.beust.kobalt.api.annotation.Task
 import com.beust.kobalt.misc.log
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.util.concurrent.TimeUnit
 
 class ExecPlugin : BasePlugin(), ITaskContributor {
     // ITaskContributor
@@ -62,15 +67,44 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
         if (config != null) {
             config.commandLines.forEach {
                 val dir = if (it.dir.isNullOrBlank()) project.directory else it.dir
-                var execute = (it.os.size == 0)
-                if (!execute) {
-                    val curOs: String = System.getProperty("os.name")
-                    it.os.forEach {
-
+                val loc = File(dir)
+                if (loc.isDirectory()) {
+                    var execute = (it.os.size == 0)
+                    if (!execute) {
+                        val curOs: String = System.getProperty("os.name")
+                        it.os.forEach os@ {
+                            execute = curOs.startsWith(it, true)
+                            if (execute) return@os
+                        }
                     }
+                    if (execute) {
+                        log(2, "> " + it.args.joinToString(" "))
+                        val pb = ProcessBuilder().command(it.args.toList())
+                        pb.directory(loc)
+                        val proc = pb.start()
+                        val err = proc.waitFor(30, TimeUnit.SECONDS)
+                        val stdin = if (proc.inputStream.available() > 0) fromStream(proc.inputStream) else listOf()
+                        val stderr = if (proc.errorStream.available() > 0) fromStream(proc.errorStream) else listOf()
+
+                        if (err == false) {
+                            error("Cannot run program \"" + it.args.joinToString(" ")
+                                    + "\" (in directory \"$dir\"): TIMEOUT")
+                        } else if (it.fail.contains(Fail.EXIT) && proc.exitValue() > 0) {
+                            error("Program \"" + it.args.joinToString(" ")
+                                    + "\" (in directory \"$dir\"): EXIT ${proc.exitValue()}")
+                        } else if (it.fail.contains(Fail.STDERR) && stderr.isNotEmpty()) {
+                            error("Program \"" + it.args.joinToString(" ") + "\" (in directory \"$dir\"): STDERR, "
+                                    + stderr[0] + "...")
+                        } else if (it.fail.contains(Fail.STDIN) && stdin.isNotEmpty()) {
+                            error("Program \"" + it.args.joinToString(" ") + "\" (in directory \"$dir\"): STDIN, "
+                                    + stdin[0] + "...")
+                        }
+
+                        success = true
+                    }
+                } else {
+                    error("Invalid directory: ${loc.canonicalPath}")
                 }
-                log(2, "Executing: '" + it.args.joinToString(" ") + "' in '$dir'")
-                success = true
             }
         }
 
@@ -81,16 +115,37 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
     fun addExecConfig(projectName: String, config: ExecConfig) {
         configs.put(projectName, config)
     }
+
+    private fun fromStream(ins: InputStream): List<String> {
+        val result = arrayListOf<String>()
+        val br = BufferedReader(InputStreamReader(ins))
+        var line = br.readLine()
+
+        while (line != null) {
+            result.add(line)
+            log(2, line)
+            line = br.readLine()
+        }
+        log(2, "")
+
+        return result
+    }
 }
 
-data class CommandLine(var args: Array<String> = emptyArray(), var dir: String = "", var os: Array<String> = emptyArray())
+enum class Fail() {
+    STDERR, STDIN, EXIT
+}
+
+data class CommandLine(var args: Array<String> = emptyArray(), var dir: String = "",
+                       var os: Array<String> = emptyArray(), var fail: Array<Fail> = emptyArray())
 
 data class ExecConfig(val project: Project) {
     val commandLines = arrayListOf<CommandLine>()
 
     @Directive
-    public fun commandLine(args: Array<String> = emptyArray(), dir: String = "", os: Array<String> = emptyArray()) {
-        if (args.size > 0) commandLines.add(CommandLine(args, dir, os))
+    public fun commandLine(args: Array<String> = emptyArray(), dir: String = "", os: Array<String> = emptyArray(),
+                           fail: Array<Fail> = emptyArray()) {
+        if (args.size > 0) commandLines.add(CommandLine(args, dir, os, fail))
     }
 }
 
