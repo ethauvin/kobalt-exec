@@ -48,7 +48,6 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
         return emptyList()
     }
 
-
     companion object {
         const val NAME: String = "Exec"
     }
@@ -63,54 +62,63 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
     private fun executeCommands(project: Project): TaskResult {
         var success = true
         val config = configs[project.name]
+        val errorMessage = StringBuilder()
 
         if (config != null) {
-            config.commandLines.forEach {
-                val dir = if (it.dir.isNullOrBlank()) project.directory else it.dir
-                val loc = File(dir)
-                if (loc.isDirectory()) {
-                    var execute = (it.os.size == 0)
+            for ((args, dir, os, fail) in config.commandLines) {
+                val wrkDir = File(if (dir.isNullOrBlank()) project.directory else dir)
+                if (wrkDir.isDirectory) {
+                    var execute = (os.size == 0)
                     if (!execute) {
                         val curOs: String = System.getProperty("os.name")
-                        it.os.forEach os@ {
-                            execute = curOs.startsWith(it, true)
-                            if (execute) return@os
+                        for (name in os) {
+                            execute = curOs.startsWith(name, true)
+                            if (execute) break
                         }
                     }
                     if (execute) {
-                        log(2, "> " + it.args.joinToString(" "))
-                        val pb = ProcessBuilder().command(it.args.toList())
-                        pb.directory(loc)
+                        log(2, "> " + args.joinToString(" "))
+                        val pb = ProcessBuilder().command(args.toList())
+                        pb.directory(wrkDir)
                         val proc = pb.start()
                         val err = proc.waitFor(30, TimeUnit.SECONDS)
                         val stdout = if (proc.inputStream.available() > 0) fromStream(proc.inputStream) else emptyList()
                         val stderr = if (proc.errorStream.available() > 0) fromStream(proc.errorStream) else emptyList()
-
-                        val errMsg = "Program \"" + it.args.joinToString(" ") + "\" (in directory \"$dir\"): "
+                        val cmdInfo = "Program \"" + args.joinToString(" ") + "\" (in directory \"${wrkDir.path}\"): "
 
                         if (err == false) {
-                            error(errMsg + "TIMEOUT")
-                        } else if (it.fail.isNotEmpty()) {
-                            val all = it.fail.contains(Fail.ALL)
-                            val output = it.fail.contains(Fail.OUTPUT)
-                            if ((all || it.fail.contains(Fail.EXIT)) && proc.exitValue() > 0) {
-                                error(errMsg + "EXIT ${proc.exitValue()}")
-                            } else if ((all || output || it.fail.contains(Fail.STDERR)) && stderr.isNotEmpty()) {
-                                error(errMsg + "STDERR, " + stderr[0])
-                            } else if ((all || output || it.fail.contains(Fail.STDOUT)) && stdout.isNotEmpty()) {
-                                error(errMsg + "STDOUT, " + stdout[0])
+                            errorMessage.append(cmdInfo).append("TIMEOUT")
+                            success = false
+                        } else if (fail.isNotEmpty()) {
+                            val all = fail.contains(Fail.ALL)
+                            val output = fail.contains(Fail.OUTPUT)
+                            if ((all || fail.contains(Fail.EXIT) || fail.contains(Fail.NORMAL)) && proc.exitValue() > 0) {
+                                errorMessage.append(cmdInfo).append("EXIT ${proc.exitValue()}")
+                                if (stderr.isNotEmpty()) errorMessage.append(", STDERR: ").append(stderr[0])
+                                success = false
+                            } else if ((all || output || fail.contains(Fail.STDERR) || fail.contains(Fail.NORMAL))
+                                    && stderr.isNotEmpty()) {
+                                errorMessage.append(cmdInfo).append("STDERR, ").append(stderr[0])
+                                success = false
+                            } else if ((all || output || fail.contains(Fail.STDOUT)) && stdout.isNotEmpty()) {
+                                errorMessage.append(cmdInfo).append("STDOUT, ").append(stdout[0])
+                                success = false
                             }
                         }
-
-                        success = true
                     }
                 } else {
-                    error("Invalid directory: ${loc.canonicalPath}")
+                    errorMessage.append("Invalid working directory: \"${wrkDir.canonicalPath}\"")
+                    success = false
                 }
+
+                if (!success) break
             }
         }
 
-        return TaskResult(success)
+        //@TODO until cedric fixes it.
+        if (!success) error(errorMessage)
+
+        return TaskResult(success, errorMessage.toString())
     }
 
     private val configs = hashMapOf<String, ExecConfig>()
@@ -135,7 +143,7 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
 }
 
 enum class Fail() {
-    ALL, STDERR, STDOUT, OUTPUT, EXIT
+    ALL, NORMAL, STDERR, STDOUT, OUTPUT, EXIT
 }
 
 data class CommandLine(var args: List<String> = emptyList(), var dir: String = "",
@@ -144,9 +152,8 @@ data class CommandLine(var args: List<String> = emptyList(), var dir: String = "
 data class ExecConfig(val project: Project) {
     val commandLines = arrayListOf<CommandLine>()
 
-    @Directive
-    public fun commandLine(args: List<String> = emptyList(), dir: String = "", os: List<String> = emptyList(),
-                           fail: Set<Fail> = emptySet()) {
+    @Directive fun commandLine(args: List<String> = emptyList(), dir: String = "", os: List<String> = emptyList(),
+                               fail: Set<Fail> = emptySet()) {
         if (args.size > 0) commandLines.add(CommandLine(args, dir, os, fail))
     }
 }

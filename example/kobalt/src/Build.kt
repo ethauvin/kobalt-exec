@@ -37,7 +37,7 @@ val p = project {
     }
 
     exec {
-        commandLine(args = listOf("ls", "-- a"), dir = "../libs", fail = setOf(Fail.STDERR, Fail.EXIT))
-		commandLine(listOf("cmd", "/c", "echo", "Test"), os = listOf("Win"), fail = setOf(Fail.STDERR, Fail.EXIT))
+        commandLine(args = listOf("ls", "-l"), dir = "../libs", fail = setOf(Fail.NORMAL))
+        commandLine(listOf("cmd", "/c", "echo", "Test"), os = listOf("Win", "Windows"), fail = setOf(Fail.NORMAL))
     }
 }
