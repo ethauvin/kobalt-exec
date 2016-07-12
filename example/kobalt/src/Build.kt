@@ -4,7 +4,10 @@ import com.beust.kobalt.plugin.application.*
 import com.beust.kobalt.plugin.java.*
 import net.thauvin.erik.kobalt.plugin.exec.*
 
-val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.1.jar"))
+val repos = repos("https://dl.bintray.com/ethauvin/maven/")
+
+//val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.5.0-beta.jar"))
+val pl = plugins("net.thauvin.erik:kobalt-exec:0.5.1-beta")
 
 val p = project {
 
@@ -37,7 +40,7 @@ val p = project {
     }
 
     exec {
-        commandLine(args = listOf("ls", "-l"), dir = "../libs", fail = setOf(Fail.NORMAL))
-        commandLine(listOf("cmd", "/c", "echo", "Test"), os = listOf("Win", "Windows"), fail = setOf(Fail.NORMAL))
+        commandLine(listOf("cmd", "/c", "echo", "Test"), os = setOf("Win"))
+		commandLine(args = listOf("ls", "-l"), dir = "../libs", os = setOf("Linux", "Win"))
     }
 }

@@ -17,7 +17,7 @@ val p = project {
     name = "kobalt-exec"
     group = "net.thauvin.erik"
     artifactId = name
-    version = "0.5.0-beta"
+    version = "0.5.1-beta"
 
     pom = Model().apply {
         name = project.name
@@ -61,6 +61,6 @@ val p = project {
     }
 
     bintray {
-        publish = false
+        publish = true
     }
 }

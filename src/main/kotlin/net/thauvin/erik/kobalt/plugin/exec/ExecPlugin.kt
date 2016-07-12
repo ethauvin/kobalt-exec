@@ -147,13 +147,14 @@ enum class Fail() {
 }
 
 data class CommandLine(var args: List<String> = emptyList(), var dir: String = "",
-                       var os: List<String> = emptyList(), var fail: Set<Fail> = emptySet())
+                       var os: Set<String> = emptySet(), var fail: Set<Fail> = setOf(Fail.NORMAL))
 
 data class ExecConfig(val project: Project) {
     val commandLines = arrayListOf<CommandLine>()
 
-    @Directive fun commandLine(args: List<String> = emptyList(), dir: String = "", os: List<String> = emptyList(),
-                               fail: Set<Fail> = emptySet()) {
+    @Directive
+    fun commandLine(args: List<String> = emptyList(), dir: String = "", os: Set<String> = emptySet(),
+                    fail: Set<Fail> = setOf(Fail.NORMAL)) {
         if (args.size > 0) commandLines.add(CommandLine(args, dir, os, fail))
     }
 }
