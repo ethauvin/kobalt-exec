@@ -15,15 +15,15 @@ var p = project {
     }
 }
 ```
-To invoke the `exex` task:
+To invoke the `exec` task:
 
 ```sh
 ./kobaltw exec
 ```
 
-## commandLine Directive
+## `commandLine` Directive
 
-The `commandLine` directive will execute command line(s) during the build process:
+The `commandLine` directive is used to execute command line(s) during the build process:
 
 ```kotlin
 exec {
@@ -63,7 +63,7 @@ List of operating systems on which the command may be executed. If the current O
 The following predefined values are available:
 
 Name          | Operating System
---------------|--------------------------------------------------------------------
+--------------|-----------------------
 `Os.FREEBSD`  | FreeBSD
 `Os.LINUX`    | Linux
 `Os.MAC`      | Apple Macintosh / OS X
@@ -88,9 +88,9 @@ List of error options to specify whether data returned to the standard streams a
 The following predefined values are available:
 
 Name          | Failure When
---------------|--------------------------------------------------------------------
+--------------|-----------------------------------------------------------------
 `Fail.EXIT`   | Exit value > 0
-`Fail.NORMAL` | Exit value > 0 or any data to the standard error stream (stderr).
+`Fail.NORMAL` | Exit value > 0 or any data to the standard error stream (stderr)
 `Fail.OUTPUT` | Any data to the standard output stream (stdout) or stderr.
 `Fail.STDERR` | Any data to stderr.
 `Fail.STDOUT` | Any data to stdout.
