@@ -50,5 +50,6 @@ val example2 = project {
 
     exec {
 		commandLine(listOf("cmd", "/c", "echo", "Test Example 2"), os = setOf("Win"))
+		commandLine(listOf("echo", "Hello, World!"))
     }
 }

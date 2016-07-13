@@ -25,18 +25,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
-      <library name="Kobalt: org.apache.ant:ant:jar:1.7.0">
+      <library name="Kobalt: org.apache.ant:ant-launcher:jar:1.7.0">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/repository/org/apache/ant/ant/1.7.0/ant-1.7.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library name="Kobalt: com.beust:jcommander:jar:1.48">
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/repository/com/beust/jcommander/1.48/jcommander-1.48.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/repository/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -52,9 +43,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
-      <library name="Kobalt: org.apache.ant:ant-launcher:jar:1.7.0">
+      <library name="Kobalt: com.beust:jcommander:jar:1.48">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/repository/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/repository/com/beust/jcommander/1.48/jcommander-1.48.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library name="Kobalt: org.apache.ant:ant:jar:1.7.0">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.kobalt/repository/org/apache/ant/ant/1.7.0/ant-1.7.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
