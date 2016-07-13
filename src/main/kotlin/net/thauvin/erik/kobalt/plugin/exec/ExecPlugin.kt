@@ -31,18 +31,23 @@
  */
 package net.thauvin.erik.kobalt.plugin.exec
 
+import com.beust.kobalt.Plugins
 import com.beust.kobalt.TaskResult
 import com.beust.kobalt.api.*
 import com.beust.kobalt.api.annotation.Directive
 import com.beust.kobalt.api.annotation.Task
 import com.beust.kobalt.misc.log
+import com.google.inject.Inject
+import com.google.inject.Singleton
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
 
-class ExecPlugin : BasePlugin(), ITaskContributor {
+@Singleton
+class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
+        BasePlugin(), ITaskContributor, IConfigActor<ExecConfig> by configActor {
     // ITaskContributor
     override fun tasksFor(project: Project, context: KobaltContext): List<DynamicTask> {
         return emptyList()
@@ -56,74 +61,70 @@ class ExecPlugin : BasePlugin(), ITaskContributor {
 
     @Task(name = "exec", description = "Execute a command line process.")
     fun taskExec(project: Project): TaskResult {
-        return executeCommands(project)
+        var result = TaskResult()
+        configurationFor(project)?.let { config ->
+            result = executeCommands(project, config)
+        }
+        return result
     }
 
-    private fun executeCommands(project: Project): TaskResult {
+    private fun executeCommands(project: Project, config: ExecConfig): TaskResult {
         var success = true
-        val config = configs[project.name]
         val errorMessage = StringBuilder()
 
-        if (config != null) {
-            for ((args, dir, os, fail) in config.commandLines) {
-                val wrkDir = File(if (dir.isNullOrBlank()) project.directory else dir)
-                if (wrkDir.isDirectory) {
-                    var execute = (os.size == 0)
-                    if (!execute) {
-                        val curOs: String = System.getProperty("os.name")
-                        for (name in os) {
-                            execute = curOs.startsWith(name, true)
-                            if (execute) break
-                        }
+        for ((args, dir, os, fail) in config.commandLines) {
+            val wrkDir = File(if (dir.isNullOrBlank()) project.directory else dir)
+            if (wrkDir.isDirectory) {
+                var execute = (os.size == 0)
+                if (!execute) {
+                    val curOs: String = System.getProperty("os.name")
+                    for (name in os) {
+                        execute = curOs.startsWith(name, true)
+                        if (execute) break
                     }
-                    if (execute) {
-                        log(2, "> " + args.joinToString(" "))
-                        val pb = ProcessBuilder().command(args.toList())
-                        pb.directory(wrkDir)
-                        val proc = pb.start()
-                        val err = proc.waitFor(30, TimeUnit.SECONDS)
-                        val stdout = if (proc.inputStream.available() > 0) fromStream(proc.inputStream) else emptyList()
-                        val stderr = if (proc.errorStream.available() > 0) fromStream(proc.errorStream) else emptyList()
-                        val cmdInfo = "Program \"" + args.joinToString(" ") + "\" (in directory \"${wrkDir.path}\"): "
-
-                        if (err == false) {
-                            errorMessage.append(cmdInfo).append("TIMEOUT")
-                            success = false
-                        } else if (fail.isNotEmpty()) {
-                            val all = fail.contains(Fail.ALL)
-                            val output = fail.contains(Fail.OUTPUT)
-                            if ((all || fail.contains(Fail.EXIT) || fail.contains(Fail.NORMAL)) && proc.exitValue() > 0) {
-                                errorMessage.append(cmdInfo).append("EXIT ${proc.exitValue()}")
-                                if (stderr.isNotEmpty()) errorMessage.append(", STDERR: ").append(stderr[0])
-                                success = false
-                            } else if ((all || output || fail.contains(Fail.STDERR) || fail.contains(Fail.NORMAL))
-                                    && stderr.isNotEmpty()) {
-                                errorMessage.append(cmdInfo).append("STDERR, ").append(stderr[0])
-                                success = false
-                            } else if ((all || output || fail.contains(Fail.STDOUT)) && stdout.isNotEmpty()) {
-                                errorMessage.append(cmdInfo).append("STDOUT, ").append(stdout[0])
-                                success = false
-                            }
-                        }
-                    }
-                } else {
-                    errorMessage.append("Invalid working directory: \"${wrkDir.canonicalPath}\"")
-                    success = false
                 }
+                if (execute) {
+                    log(2, "> " + args.joinToString(" "))
+                    val pb = ProcessBuilder().command(args.toList())
+                    pb.directory(wrkDir)
+                    val proc = pb.start()
+                    val err = proc.waitFor(30, TimeUnit.SECONDS)
+                    val stdout = if (proc.inputStream.available() > 0) fromStream(proc.inputStream) else emptyList()
+                    val stderr = if (proc.errorStream.available() > 0) fromStream(proc.errorStream) else emptyList()
+                    val cmdInfo = "Program \"" + args.joinToString(" ") + "\" (in directory \"${wrkDir.path}\"): "
 
-                if (!success) break
+                    if (err == false) {
+                        errorMessage.append(cmdInfo).append("TIMEOUT")
+                        success = false
+                    } else if (fail.isNotEmpty()) {
+                        val all = fail.contains(Fail.ALL)
+                        val output = fail.contains(Fail.OUTPUT)
+                        if ((all || fail.contains(Fail.EXIT) || fail.contains(Fail.NORMAL)) && proc.exitValue() > 0) {
+                            errorMessage.append(cmdInfo).append("EXIT ${proc.exitValue()}")
+                            if (stderr.isNotEmpty()) errorMessage.append(", STDERR: ").append(stderr[0])
+                            success = false
+                        } else if ((all || output || fail.contains(Fail.STDERR) || fail.contains(Fail.NORMAL))
+                                && stderr.isNotEmpty()) {
+                            errorMessage.append(cmdInfo).append("STDERR, ").append(stderr[0])
+                            success = false
+                        } else if ((all || output || fail.contains(Fail.STDOUT)) && stdout.isNotEmpty()) {
+                            errorMessage.append(cmdInfo).append("STDOUT, ").append(stdout[0])
+                            success = false
+                        }
+                    }
+                }
+            } else {
+                errorMessage.append("Invalid working directory: \"${wrkDir.canonicalPath}\"")
+                success = false
             }
+
+            if (!success) break
         }
 
         //@TODO until cedric fixes it.
         if (!success) error(errorMessage)
 
         return TaskResult(success, errorMessage.toString())
-    }
-
-    private val configs = hashMapOf<String, ExecConfig>()
-    fun addExecConfig(projectName: String, config: ExecConfig) {
-        configs.put(projectName, config)
     }
 
     private fun fromStream(ins: InputStream): List<String> {
@@ -146,13 +147,13 @@ enum class Fail() {
     ALL, NORMAL, STDERR, STDOUT, OUTPUT, EXIT
 }
 
-data class CommandLine(var args: List<String> = emptyList(), var dir: String = "",
-                       var os: Set<String> = emptySet(), var fail: Set<Fail> = setOf(Fail.NORMAL))
+data class CommandLine(var args: List<String> = emptyList(), var dir: String = "", var os: Set<String> = emptySet(),
+                       var fail: Set<Fail> = setOf(Fail.NORMAL))
 
-data class ExecConfig(val project: Project) {
+@Directive
+class ExecConfig() {
     val commandLines = arrayListOf<CommandLine>()
 
-    @Directive
     fun commandLine(args: List<String> = emptyList(), dir: String = "", os: Set<String> = emptySet(),
                     fail: Set<Fail> = setOf(Fail.NORMAL)) {
         if (args.size > 0) commandLines.add(CommandLine(args, dir, os, fail))
@@ -160,10 +161,9 @@ data class ExecConfig(val project: Project) {
 }
 
 @Directive
-fun Project.exec(init: ExecConfig.() -> Unit): ExecConfig {
-    with(ExecConfig(this)) {
-        init()
-        (Kobalt.findPlugin(ExecPlugin.NAME) as ExecPlugin).addExecConfig(name, this)
-        return this
+fun Project.exec(init: ExecConfig.() -> Unit) {
+    ExecConfig().let { config ->
+        config.init()
+        (Plugins.findPlugin(ExecPlugin.NAME) as ExecPlugin).addConfiguration(this, config)
     }
 }

@@ -6,10 +6,10 @@ import net.thauvin.erik.kobalt.plugin.exec.*
 
 val repos = repos("https://dl.bintray.com/ethauvin/maven/")
 
-//val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.5.0-beta.jar"))
-val pl = plugins("net.thauvin.erik:kobalt-exec:0.5.1-beta")
+val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.5.1-beta.jar"))
+//val pl = plugins("net.thauvin.erik:kobalt-exec:0.5.1-beta")
 
-val p = project {
+val example = project {
 
     name = "example"
     group = "com.example"
@@ -40,7 +40,15 @@ val p = project {
     }
 
     exec {
-        commandLine(listOf("cmd", "/c", "echo", "Test"), os = setOf("Win"))
+        commandLine(listOf("cmd", "/c", "echo", "Test Example 1"), os = setOf("Win"))
 		commandLine(args = listOf("ls", "-l"), dir = "../libs", os = setOf("Linux", "Win"))
+    }
+}
+
+val example2 = project {
+    name = "example2"
+
+    exec {
+		commandLine(listOf("cmd", "/c", "echo", "Test Example 2"), os = setOf("Win"))
     }
 }
