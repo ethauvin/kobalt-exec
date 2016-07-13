@@ -2,6 +2,8 @@
 
 [![License (3-Clause BSD)](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg?style=flat-square)](http://opensource.org/licenses/BSD-3-Clause) [![Build Status](https://travis-ci.org/ethauvin/kobalt-exec.svg?branch=master)](https://travis-ci.org/ethauvin/kobalt-exec)
 
+To use the plug-in included the following in your `Build.kt` file:
+
 ```kotlin
 var pl = plugins("net.thauvin.erik:kobalt-exc:")
 
@@ -13,12 +15,15 @@ var p = project {
     }
 }
 ```
+To invoke the `exex` task:
 
 ```sh
-./kobaltw assemble exec
+./kobaltw exec
 ```
 
-## CommandLine Directive
+## commandLine Directive
+
+The `commandLine` directive will execute command line(s) during the build process:
 
 ```kotlin
 exec {
@@ -30,9 +35,9 @@ exec {
 
 ### Parameters
 
-#### args
+#### `args`
 
-The full command line including the executable and its parameters.
+The full command line including the executable and all parameters.
 
 ```kotlin
 exec {
@@ -41,9 +46,9 @@ exec {
 }
 ```
 
-#### dir
+#### `dir`
 
-The working directory for the process. Defaults to the project directory.
+The working directory in which the command should be executed. Defaults to the project directory.
 
 ```kotlin
 exec {
@@ -51,23 +56,23 @@ exec {
 }
 ```
 
-#### os
+#### `os`
 
-The operating system(s) to execute the command on. If the current operating system does not match, the command will not be executed.
+List of operating systems on which the command may be executed. If the current OS is contained within the list, the command will be executed.
 
 The following predefined values are available:
 
-Name        | Operating System
-------------|--------------------------------------------------------------------
-Os.FREEBSD  | FreeBSD
-Os.LINUX    | Linux
-Os.MAC      | Apple Macintosh / OS X
-Os.OPENVMS  | OpenVMS
-Os.OS400    | OS/400
-Os.SOLARIS  | Solaris / SunOS
-Os.TANDEM   | Tandem's Non-Stop
-Os.WINDOWS  | Microsoft Windows
-Os.ZOS      | z/OS / OS/390
+Name          | Operating System
+--------------|--------------------------------------------------------------------
+`Os.FREEBSD`  | FreeBSD
+`Os.LINUX`    | Linux
+`Os.MAC`      | Apple Macintosh / OS X
+`Os.OPENVMS`  | OpenVMS
+`Os.OS400`    | OS/400
+`Os.SOLARIS`  | Solaris / SunOS
+`Os.TANDEM`   | Tandem's Non-Stop
+`Os.WINDOWS`  | Microsoft Windows
+`Os.ZOS`      | z/OS / OS/390
 
 ```kotlin
 exec {
@@ -76,20 +81,20 @@ exec {
 }
 ```
 
-#### fail
+#### `fail`
 
-Specifies whether output to the stderr, stdout and/or an abnormal exit value constitutes a failure.
+List of error options to specify whether data returned to the standard streams and/or an abnormal exit value constitute build failure signaling.
 
 The following predefined values are available:
 
-Name        | Failure When
-------------|--------------------------------------------------------------------
-Fail.EXIT   | Exit value > 0
-Fail.NORMAL | Exit value > 0 or any output to the standard error stream (stderr).
-Fail.OUTPUT | Any output to the standard output stream (stdout) or stderr.
-Fail.STDERR | Any output to stderr.
-Fail.STDOUT | Any output to stdout.
-Fail.ALL    | Any of the conditions above.
+Name          | Failure When
+--------------|--------------------------------------------------------------------
+`Fail.EXIT`   | Exit value > 0
+`Fail.NORMAL` | Exit value > 0 or any data to the standard error stream (stderr).
+`Fail.OUTPUT` | Any data to the standard output stream (stdout) or stderr.
+`Fail.STDERR` | Any data to stderr.
+`Fail.STDOUT` | Any data to stdout.
+`Fail.ALL`    | Any of the conditions above.
 
 `Fail.NORMAL` is the default value.
 
