@@ -33,9 +33,9 @@ exec {
 }
 ```
 
-### Parameters
+## Parameters
 
-#### `args`
+### `args`
 
 The full command line including the executable and all parameters.
 
@@ -46,7 +46,7 @@ exec {
 }
 ```
 
-#### `dir`
+### `dir`
 
 The working directory in which the command should be executed. Defaults to the project directory.
 
@@ -56,7 +56,7 @@ exec {
 }
 ```
 
-#### `os`
+### `os`
 
 List of operating systems on which the command may be executed. If the current OS is contained within the list, the command will be executed.
 
@@ -81,7 +81,7 @@ exec {
 }
 ```
 
-#### `fail`
+### `fail`
 
 List of error options to specify whether data returned to the standard streams and/or an abnormal exit value constitute build failure signaling.
 
@@ -105,7 +105,7 @@ exec {
 }
 ```
 
-### Logging / Debugging
+## Logging / Debugging
 
 ```sh
 ./kobaltw exec --log 2
