@@ -40,8 +40,8 @@ val example = project {
     }
 
     exec {
-        commandLine(listOf("cmd", "/c", "echo", "Test Example 1"), os = setOf("Win"))
-		commandLine(args = listOf("ls", "-l"), dir = "../libs", os = setOf("Linux", "Win"))
+        commandLine(listOf("cmd", "/c", "echo", "Test Example 1"), os = setOf(Os.WINDOWS))
+        commandLine(args = listOf("ls", "-l"), dir = "../libs", os = setOf(Os.LINUX, Os.WINDOWS))
     }
 }
 
@@ -49,7 +49,8 @@ val example2 = project {
     name = "example2"
 
     exec {
-		commandLine(listOf("cmd", "/c", "echo", "Test Example 2"), os = setOf("Win"))
+        commandLine(listOf("cmd", "/c", "echo", "Test Example 2"), os = setOf(Os.WINDOWS))
 		commandLine(listOf("echo", "Hello, World!"))
+        commandLine(listOf("sh", "-c", "ps aux | grep bash"), fail = setOf(Fail.EXIT))
     }
 }

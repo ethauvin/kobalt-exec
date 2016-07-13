@@ -43,6 +43,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Singleton
@@ -68,6 +69,47 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
         return result
     }
 
+    private fun matchOs(os: Os): Boolean {
+        val curOs: String = System.getProperty("os.name").toLowerCase(Locale.US)
+        when (os) {
+            Os.WINDOWS -> {
+                return curOs.contains("windows")
+            }
+
+            Os.MAC -> {
+                return (curOs.contains("mac") || curOs.contains("darwin") || curOs.contains("osx"))
+            }
+
+            Os.SOLARIS -> {
+                return (curOs.contains("sunos") || curOs.contains("solaris"))
+            }
+
+            Os.LINUX -> {
+                return curOs.contains("linux")
+            }
+
+            Os.FREEBSD -> {
+                return curOs.contains("freebsd")
+            }
+
+            Os.ZOS -> {
+                return (curOs.contains("z/os") || curOs.contains("os/390"))
+            }
+
+            Os.OPENVMS -> {
+                return curOs.contains("openvms")
+            }
+
+            Os.TANDEM -> {
+                return curOs.contains("nonstop_kernel")
+            }
+
+            Os.OS400 -> {
+                return curOs.contains("os/400")
+            }
+        }
+    }
+
     private fun executeCommands(project: Project, config: ExecConfig): TaskResult {
         var success = true
         val errorMessage = StringBuilder()
@@ -77,9 +119,8 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
             if (wrkDir.isDirectory) {
                 var execute = (os.size == 0)
                 if (!execute) {
-                    val curOs: String = System.getProperty("os.name")
                     for (name in os) {
-                        execute = curOs.startsWith(name, true)
+                        execute = matchOs(name)
                         if (execute) break
                     }
                 }
@@ -147,14 +188,18 @@ enum class Fail() {
     ALL, NORMAL, STDERR, STDOUT, OUTPUT, EXIT
 }
 
-data class CommandLine(var args: List<String> = emptyList(), var dir: String = "", var os: Set<String> = emptySet(),
+enum class Os() {
+    WINDOWS, MAC, SOLARIS, LINUX, FREEBSD, ZOS, OPENVMS, TANDEM, OS400
+}
+
+data class CommandLine(var args: List<String> = emptyList(), var dir: String = "", var os: Set<Os> = emptySet(),
                        var fail: Set<Fail> = setOf(Fail.NORMAL))
 
 @Directive
 class ExecConfig() {
     val commandLines = arrayListOf<CommandLine>()
 
-    fun commandLine(args: List<String> = emptyList(), dir: String = "", os: Set<String> = emptySet(),
+    fun commandLine(args: List<String> = emptyList(), dir: String = "", os: Set<Os> = emptySet(),
                     fail: Set<Fail> = setOf(Fail.NORMAL)) {
         if (args.size > 0) commandLines.add(CommandLine(args, dir, os, fail))
     }
