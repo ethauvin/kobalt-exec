@@ -17,7 +17,7 @@ val p = project {
     name = "kobalt-exec"
     group = "net.thauvin.erik"
     artifactId = name
-    version = "0.5.1-beta"
+    version = "0.6.0-beta"
 
     pom = Model().apply {
         description = "Command Line Execution plug-in for the Kobalt build system."

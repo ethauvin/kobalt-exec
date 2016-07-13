@@ -75,35 +75,27 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
             Os.WINDOWS -> {
                 return curOs.contains("windows")
             }
-
             Os.MAC -> {
                 return (curOs.contains("mac") || curOs.contains("darwin") || curOs.contains("osx"))
             }
-
-            Os.SOLARIS -> {
-                return (curOs.contains("sunos") || curOs.contains("solaris"))
-            }
-
             Os.LINUX -> {
                 return curOs.contains("linux")
             }
-
             Os.FREEBSD -> {
                 return curOs.contains("freebsd")
             }
-
-            Os.ZOS -> {
-                return (curOs.contains("z/os") || curOs.contains("os/390"))
+            Os.SOLARIS -> {
+                return (curOs.contains("sunos") || curOs.contains("solaris"))
             }
-
             Os.OPENVMS -> {
                 return curOs.contains("openvms")
             }
-
+            Os.ZOS -> {
+                return (curOs.contains("z/os") || curOs.contains("os/390"))
+            }
             Os.TANDEM -> {
                 return curOs.contains("nonstop_kernel")
             }
-
             Os.OS400 -> {
                 return curOs.contains("os/400")
             }
@@ -137,7 +129,7 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
                     if (err == false) {
                         errorMessage.append(cmdInfo).append("TIMEOUT")
                         success = false
-                    } else if (fail.isNotEmpty()) {
+                    } else if (!fail.contains(Fail.NONE)) {
                         val all = fail.contains(Fail.ALL)
                         val output = fail.contains(Fail.OUTPUT)
                         if ((all || fail.contains(Fail.EXIT) || fail.contains(Fail.NORMAL)) && proc.exitValue() > 0) {
@@ -185,11 +177,11 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
 }
 
 enum class Fail() {
-    ALL, NORMAL, STDERR, STDOUT, OUTPUT, EXIT
+    ALL, EXIT, NONE, NORMAL, OUTPUT, STDERR, STDOUT
 }
 
 enum class Os() {
-    WINDOWS, MAC, SOLARIS, LINUX, FREEBSD, ZOS, OPENVMS, TANDEM, OS400
+    FREEBSD, LINUX, MAC, OPENVMS, OS400, SOLARIS, TANDEM, WINDOWS, ZOS
 }
 
 data class CommandLine(var args: List<String> = emptyList(), var dir: String = "", var os: Set<Os> = emptySet(),

@@ -6,8 +6,8 @@ import net.thauvin.erik.kobalt.plugin.exec.*
 
 val repos = repos("https://dl.bintray.com/ethauvin/maven/")
 
-val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.5.1-beta.jar"))
-//val pl = plugins("net.thauvin.erik:kobalt-exec:0.5.1-beta")
+//val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.6.0-beta.jar"))
+val pl = plugins("net.thauvin.erik:kobalt-exec:0.6.0-beta")
 
 val example = project {
 
@@ -40,8 +40,10 @@ val example = project {
     }
 
     exec {
+        commandLine(listOf( "echo", "Test Example 1"), os = setOf(Os.LINUX))
         commandLine(listOf("cmd", "/c", "echo", "Test Example 1"), os = setOf(Os.WINDOWS))
-        commandLine(args = listOf("ls", "-l"), dir = "../libs", os = setOf(Os.LINUX, Os.WINDOWS))
+        commandLine(args = listOf("ls", "-l"), dir = "../libs", os = setOf(Os.LINUX))
+        commandLine(args = listOf("cmd", "/c", "dir /Q"), dir = "../libs", os = setOf(Os.WINDOWS))
     }
 }
 
@@ -50,7 +52,8 @@ val example2 = project {
 
     exec {
         commandLine(listOf("cmd", "/c", "echo", "Test Example 2"), os = setOf(Os.WINDOWS))
-		commandLine(listOf("echo", "Hello, World!"))
-        commandLine(listOf("sh", "-c", "ps aux | grep bash"), fail = setOf(Fail.EXIT))
+		commandLine(listOf("echo", "Test example 2"), os = setOf(Os.LINUX))
+        commandLine(listOf("cmd", "/c", "tasklist | find \"cmd.exe\""), os = setOf(Os.WINDOWS), fail = setOf(Fail.NONE))
+        commandLine(listOf("/bin/sh", "-c", "ps aux | grep bash"), os = setOf(Os.LINUX))
     }
 }

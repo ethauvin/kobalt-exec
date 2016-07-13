@@ -2,9 +2,13 @@
 
 [![License (3-Clause BSD)](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg?style=flat-square)](http://opensource.org/licenses/BSD-3-Clause) [![Build Status](https://travis-ci.org/ethauvin/kobalt-exec.svg?branch=master)](https://travis-ci.org/ethauvin/kobalt-exec)
 
+The plug-in allows for the execution of system commands, similarly to the [Gradle Exec](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Exec.html) or [Ant Exec](https://ant.apache.org/manual/Tasks/exec.html) tasks.
+
 To use the plug-in included the following in your `Build.kt` file:
 
 ```kotlin
+import net.thauvin.erik.kobalt.plugin.exec.*
+
 var pl = plugins("net.thauvin.erik:kobalt-exc:")
 
 var p = project {
@@ -15,6 +19,8 @@ var p = project {
     }
 }
 ```
+[Examples](https://github.com/ethauvin/kobalt-exec/blob/master/example/kobalt/src/Build.kt)
+
 To invoke the `exec` task:
 
 ```sh
@@ -42,7 +48,7 @@ The full command line including the executable and all parameters.
 ```kotlin
 exec {
     commandLine(listOf("ls", "-l"))
-    comamndLine(args = listOf("touch", "README.md"))
+    commandLine(args = listOf("cmd", "/c", "dir /Q"))
 }
 ```
 
@@ -53,6 +59,7 @@ The working directory in which the command should be executed. Defaults to the p
 ```kotlin
 exec {
     commandLine(listOf("cmd", "/c", "stop.bat"), dir = "../tomcat/bin")
+    commandLine("./stop.sh", dir = "../tomcat/bin")
 }
 ```
 
@@ -95,6 +102,7 @@ Name          | Failure When
 `Fail.STDERR` | Any data to stderr.
 `Fail.STDOUT` | Any data to stdout.
 `Fail.ALL`    | Any of the conditions above.
+`Fail.NONE`   | Never fails.
 
 `Fail.NORMAL` is the default value.
 
@@ -107,10 +115,18 @@ exec {
 
 ## Logging / Debugging
 
+To view the output of the `exec` task, use:
 ```sh
 ./kobaltw exec --log 2
 ```
+You could also redirect the error stream to a file:
 
+```kotlin
+exec {
+    commandLine(listOf("/bin/sh", "-c", "./stop.sh 2> error.txt"), os = setOf(Os.LINUX))
+    commandLine(listOf("cmd", "/c", "stop.bat 2> error.txt"), os = setOf(Os.WINDOWS))
+}
+```
 
 
 
