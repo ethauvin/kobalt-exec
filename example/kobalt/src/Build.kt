@@ -52,7 +52,7 @@ val example2 = project {
 
     exec {
         commandLine(listOf("cmd", "/c", "echo", "Test Example 2"), os = setOf(Os.WINDOWS))
-		commandLine(listOf("echo", "Test example 2"), os = setOf(Os.LINUX))
+        commandLine(listOf("echo", "Test example 2"), os = setOf(Os.LINUX))
         commandLine(listOf("cmd", "/c", "tasklist | find \"cmd.exe\""), os = setOf(Os.WINDOWS), fail = setOf(Fail.NONE))
         commandLine(listOf("/bin/sh", "-c", "ps aux | grep bash"), os = setOf(Os.LINUX))
     }
