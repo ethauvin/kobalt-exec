@@ -47,7 +47,7 @@ val p = project {
     }
 
     dependencies {
-        compile("com.beust:$kobaltDependency:0.842")
+        compile("com.beust:$kobaltDependency:0.863")
     }
 
     dependenciesTest {
