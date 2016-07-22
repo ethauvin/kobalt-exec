@@ -6,8 +6,8 @@ import net.thauvin.erik.kobalt.plugin.exec.*
 
 val repos = repos("https://dl.bintray.com/ethauvin/maven/")
 
-//val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.6.0-beta.jar"))
-val pl = plugins("net.thauvin.erik:kobalt-exec:0.6.0-beta")
+//val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.6.1.jar"))
+val pl = plugins("net.thauvin.erik:kobalt-exec:0.6.1")
 
 val example = project {
 

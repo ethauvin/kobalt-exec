@@ -4,14 +4,14 @@
 
 The plug-in allows for the execution of system commands, similarly to the [Gradle Exec](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Exec.html) or [Ant Exec](https://ant.apache.org/manual/Tasks/exec.html) tasks.
 
-To use the plug-in included the following in your `Build.kt` file:
+To use the plug-in include the following in your `Build.kt` file:
 
 ```kotlin
 import net.thauvin.erik.kobalt.plugin.exec.*
 
-var pl = plugins("net.thauvin.erik:kobalt-exc:")
+val pl = plugins("net.thauvin.erik:kobalt-exc:")
 
-var p = project {
+val p = project {
     name = "example"
 	
     exec {
@@ -19,7 +19,7 @@ var p = project {
     }
 }
 ```
-[Examples](https://github.com/ethauvin/kobalt-exec/blob/master/example/kobalt/src/Build.kt)
+[View Example](https://github.com/ethauvin/kobalt-exec/blob/master/example/kobalt/src/Build.kt)
 
 To invoke the `exec` task:
 
