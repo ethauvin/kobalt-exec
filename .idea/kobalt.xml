@@ -5,7 +5,7 @@
       <KobaltProjectSettings>
         <option name="autoDownloadKobalt" value="true" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="kobaltHome" value="$USER_HOME$/.kobalt/wrapper/dist/kobalt-0.853" />
+        <option name="kobaltHome" value="$USER_HOME$/.kobalt/wrapper/dist/kobalt-0.867" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
