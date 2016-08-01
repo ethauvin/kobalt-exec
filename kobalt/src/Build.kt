@@ -10,7 +10,7 @@ import org.apache.maven.model.Scm
 import net.thauvin.erik.kobalt.plugin.versioneye.*
 
 
-val pl = plugins("net.thauvin.erik:kobalt-versioneye:")
+val pl = plugins("net.thauvin.erik:kobalt-versioneye:0.4.2-beta")
 val repos = repos()
 
 val dev = false
@@ -21,7 +21,7 @@ val p = project {
     name = "kobalt-exec"
     group = "net.thauvin.erik"
     artifactId = name
-    version = "0.6.1"
+    version = "0.6.2"
 
     pom = Model().apply {
         description = "Command Line Execution plug-in for the Kobalt build system."
