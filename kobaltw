@@ -1,2 +1,2 @@
-#!/bin/sh -x
-java -jar "`dirname "$0"`/kobalt/wrapper/kobalt-wrapper.jar" $*
+#!/bin/sh
+java -jar "`dirname $0`/kobalt/wrapper/kobalt-wrapper.jar" $*
