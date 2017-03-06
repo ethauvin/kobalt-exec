@@ -4,8 +4,9 @@ import com.beust.kobalt.plugin.application.*
 import com.beust.kobalt.plugin.java.*
 import net.thauvin.erik.kobalt.plugin.exec.*
 
-//val pl = plugins(file("../kobaltBuild/libs/kobalt-exec-0.6.2.jar"))
-val pl = plugins("net.thauvin.erik:kobalt-exec:0.6.2")
+val bs = buildScript {
+    plugins("net.thauvin.erik:kobalt-exec:0.6.2")
+}
 
 val example = project {
 

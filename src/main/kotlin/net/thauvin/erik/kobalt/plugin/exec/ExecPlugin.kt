@@ -1,7 +1,7 @@
 /*
  * ExecPlugin.kt
  *
- * Copyright (c) 2016, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2016-2017, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,6 +60,7 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
 
     override val name = NAME
 
+    @Suppress("unused")
     @Task(name = "exec", description = "Execute a command line process.")
     fun taskExec(project: Project): TaskResult {
         var result = TaskResult()
@@ -109,7 +110,7 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
         for ((args, dir, os, fail) in config.commandLines) {
             val wrkDir = File(if (dir.isNullOrBlank()) project.directory else dir)
             if (wrkDir.isDirectory) {
-                var execute = (os.size == 0)
+                var execute = (os.isEmpty())
                 if (!execute) {
                     for (name in os) {
                         execute = matchOs(name)
@@ -126,7 +127,7 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
                     val stderr = if (proc.errorStream.available() > 0) fromStream(proc.errorStream) else emptyList()
                     val cmdInfo = "Program \"" + args.joinToString(" ") + "\" (in directory \"${wrkDir.path}\"): "
 
-                    if (err == false) {
+                    if (!err) {
                         errorMessage.append(cmdInfo).append("TIMEOUT")
                         success = false
                     } else if (!fail.contains(Fail.NONE)) {
@@ -176,11 +177,11 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
     }
 }
 
-enum class Fail() {
+enum class Fail {
     ALL, EXIT, NONE, NORMAL, OUTPUT, STDERR, STDOUT
 }
 
-enum class Os() {
+enum class Os {
     FREEBSD, LINUX, MAC, OPENVMS, OS400, SOLARIS, TANDEM, WINDOWS, ZOS
 }
 
@@ -188,15 +189,17 @@ data class CommandLine(var args: List<String> = emptyList(), var dir: String = "
                        var fail: Set<Fail> = setOf(Fail.NORMAL))
 
 @Directive
-class ExecConfig() {
+class ExecConfig {
     val commandLines = arrayListOf<CommandLine>()
 
+    @Suppress("unused")
     fun commandLine(args: List<String> = emptyList(), dir: String = "", os: Set<Os> = emptySet(),
                     fail: Set<Fail> = setOf(Fail.NORMAL)) {
-        if (args.size > 0) commandLines.add(CommandLine(args, dir, os, fail))
+        if (args.isNotEmpty()) commandLines.add(CommandLine(args, dir, os, fail))
     }
 }
 
+@Suppress("unused")
 @Directive
 fun Project.exec(init: ExecConfig.() -> Unit) {
     ExecConfig().let { config ->
