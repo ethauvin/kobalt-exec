@@ -9,7 +9,9 @@ To use the plug-in include the following in your `Build.kt` file:
 ```kotlin
 import net.thauvin.erik.kobalt.plugin.exec.*
 
-val pl = plugins("net.thauvin.erik:kobalt-exc:")
+val bs = buildScript {
+    plugins("net.thauvin.erik:kobalt-exc:")
+}
 
 val p = project {
     name = "example"
