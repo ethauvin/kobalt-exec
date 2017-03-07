@@ -1,11 +1,13 @@
-import com.beust.kobalt.*
-import com.beust.kobalt.plugin.packaging.*
-import com.beust.kobalt.plugin.application.*
-import com.beust.kobalt.plugin.java.*
-import net.thauvin.erik.kobalt.plugin.exec.*
+import com.beust.kobalt.buildScript
+import com.beust.kobalt.plugin.application.application
+import com.beust.kobalt.plugin.packaging.assemble
+import com.beust.kobalt.project
+import net.thauvin.erik.kobalt.plugin.exec.Os
+import net.thauvin.erik.kobalt.plugin.exec.exec
 
 val bs = buildScript {
-    plugins("net.thauvin.erik:kobalt-exec:0.6.2")
+    //plugins(file("../kobaltBuild/libs/kobalt-exec-0.6.2.jar"))
+    plugins("net.thauvin.erik:kobalt-exec:")
 }
 
 val example = project {
@@ -39,7 +41,7 @@ val example = project {
     }
 
     exec {
-        commandLine(listOf( "echo", "Test Example 1"), os = setOf(Os.LINUX))
+        commandLine(listOf("echo", "Test Example 1"), os = setOf(Os.LINUX))
         commandLine(listOf("cmd", "/c", "echo", "Test Example 1"), os = setOf(Os.WINDOWS))
         commandLine(args = listOf("ls", "-l"), dir = "../libs", os = setOf(Os.LINUX))
         commandLine(args = listOf("cmd", "/c", "dir /Q"), dir = "../libs", os = setOf(Os.WINDOWS))
