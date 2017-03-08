@@ -1,10 +1,13 @@
 import com.beust.kobalt.*
-import com.beust.kobalt.plugin.application.application
-import com.beust.kobalt.plugin.packaging.assemble
+import com.beust.kobalt.plugin.application.*
+import com.beust.kobalt.plugin.packaging.*
 import net.thauvin.erik.kobalt.plugin.exec.*
 
+// ./kobaltw exec
+// ./kobaltw example:exec
+// ./kobaltw example2:exec
+
 val bs = buildScript {
-    //plugins(file("../kobaltBuild/libs/kobalt-exec-0.6.3.jar"))
     plugins("net.thauvin.erik:kobalt-exec:")
 }
 
