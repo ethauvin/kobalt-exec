@@ -15,7 +15,7 @@
     <orderEntry type="module-library">
       <library name="Kobalt: com.beust:kobalt-plugin-api:jar:(0,]">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/cache/com/beust/kobalt-plugin-api/0.939/kobalt-plugin-api-0.939.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/cache/com/beust/kobalt-plugin-api/1.0.8/kobalt-plugin-api-1.0.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
