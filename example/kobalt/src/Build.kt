@@ -3,9 +3,9 @@ import com.beust.kobalt.plugin.application.*
 import com.beust.kobalt.plugin.packaging.*
 import net.thauvin.erik.kobalt.plugin.exec.*
 
-// ./kobaltw exec
-// ./kobaltw example:exec
-// ./kobaltw example2:exec
+// ./kobaltw exec --log 2
+// ./kobaltw example:exec --log 2
+// ./kobaltw example2:exec --log 2
 
 val bs = buildScript {
     plugins("net.thauvin.erik:kobalt-exec:")
@@ -17,20 +17,6 @@ val example = project {
     group = "com.example"
     artifactId = name
     version = "0.1"
-
-    sourceDirectories {
-        path("src/main/java")
-    }
-
-    sourceDirectoriesTest {
-        path("src/test/java")
-    }
-
-    dependencies {
-    }
-
-    dependenciesTest {
-    }
 
     assemble {
         jar {
