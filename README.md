@@ -15,7 +15,7 @@ val bs = buildScript {
 
 val p = project {
     name = "example"
-	
+
     exec {
        commandLine(listOf("echo", "Hello, World!"))
     }
