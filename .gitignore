@@ -4,8 +4,8 @@
 **/.idea/tasks.xml
 **/.idea/workspace.xml
 *.iws
-.DS_Store
 .classpath
+.DS_Store
 .gradle
 .kobalt
 .nb-gradle
@@ -15,8 +15,10 @@
 /build
 /deploy
 /dist
+/example/libs/
 /gen
 /gradle.properties
+/lib
 /libs
 /local.properties
 /out
@@ -24,7 +26,6 @@
 /project.properties
 /target
 /test-output
-Thumbs.db
 ehthumbs.db
 kobaltBuild
-/example/libs/
+Thumbs.db
