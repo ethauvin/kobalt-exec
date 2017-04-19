@@ -39,10 +39,7 @@ import com.beust.kobalt.api.annotation.Task
 import com.beust.kobalt.misc.log
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -63,11 +60,11 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
     @Suppress("unused")
     @Task(name = "exec", description = "Execute a command line process.")
     fun taskExec(project: Project): TaskResult {
-        var result = TaskResult()
         configurationFor(project)?.let { config ->
-            result = executeCommands(project, config)
+            return executeCommands(project, config)
         }
-        return result
+
+        return TaskResult()
     }
 
     private fun matchOs(os: Os): Boolean {
@@ -155,10 +152,10 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
             if (!success) break
         }
 
-        //@TODO until cedric fixes it.
+        //@TODO until Cedric fixes it.
         if (!success) error(errorMessage)
 
-        return TaskResult(success, errorMessage.toString())
+        return TaskResult(success)
     }
 
     private fun fromStream(ins: InputStream): List<String> {
