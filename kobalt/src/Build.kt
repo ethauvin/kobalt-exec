@@ -7,7 +7,8 @@ import net.thauvin.erik.kobalt.plugin.versioneye.versionEye
 import org.apache.maven.model.*
 
 val bs = buildScript {
-    plugins("net.thauvin.erik:kobalt-versioneye:")
+    repos(file("K:/maven/repository"))
+    plugins("net.thauvin.erik:kobalt-versioneye:", "net.thauvin.erik:kobalt-maven-local:")
 }
 
 val dev by profile()
@@ -18,7 +19,7 @@ val p = project {
     name = "kobalt-exec"
     group = "net.thauvin.erik"
     artifactId = name
-    version = "0.6.4"
+    version = "0.6.5"
 
     pom = Model().apply {
         description = "Command Line Execution plug-in for the Kobalt build system."
@@ -48,7 +49,9 @@ val p = project {
     }
 
     assemble {
-        mavenJars {}
+        mavenJars {
+            fatJar = true
+        }
     }
 
     autoGitTag {
