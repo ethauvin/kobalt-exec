@@ -45,7 +45,7 @@ exec {
 
 ### `args`
 
-The full command line arguments including the executable and all parameters.
+The full command line including the executable and all arguments.
 
 ```kotlin
 exec {
@@ -74,9 +74,12 @@ The following predefined values are available:
 
 Name          | Operating System
 --------------|-----------------------
+`Os.CYGWIN`   | Cygwin
 `Os.FREEBSD`  | FreeBSD
 `Os.LINUX`    | Linux
 `Os.MAC`      | Apple Macintosh / OS X
+`Os.MINGW`    | Minimalist GNU for Windows
+`OS.MSYS`     | MSYS
 `Os.OPENVMS`  | OpenVMS
 `Os.OS400`    | OS/400
 `Os.SOLARIS`  | Solaris / SunOS
@@ -118,7 +121,7 @@ exec {
 
 ## taskName
 
-Additionally, you can specify a task name to easily identify multiple `exec` directives.
+Additionally, you can specify a task name to easily identify multiple `exec` tasks.
 
 ```kotlin
 exec {
@@ -163,6 +166,3 @@ exec {
     commandLine("cmd", "/c", "stop.bat 2> error.txt", os = setOf(Os.WINDOWS))
 }
 ```
-
-
-

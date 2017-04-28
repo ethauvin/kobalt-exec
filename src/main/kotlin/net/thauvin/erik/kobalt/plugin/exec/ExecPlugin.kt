@@ -102,6 +102,18 @@ class ExecPlugin @Inject constructor(val taskContributor: TaskContributor, val c
             Os.OS400 -> {
                 return curOs.contains("os/400")
             }
+            Os.CYGWIN -> {
+                val cygwin: String? = System.getenv("ORIGINAL_PATH")
+                return cygwin?.contains("/cygdrive/") ?: false
+            }
+            Os.MINGW -> {
+                val mingw: String? = System.getenv("MSYSTEM")
+                return mingw?.startsWith("MINGW") ?: false
+            }
+            Os.MSYS -> {
+                val msys: String? = System.getenv("MSYSTEM")
+                return msys?.startsWith("MSYS") ?: false
+            }
         }
     }
 
@@ -184,7 +196,7 @@ enum class Fail {
 }
 
 enum class Os {
-    FREEBSD, LINUX, MAC, OPENVMS, OS400, SOLARIS, TANDEM, WINDOWS, ZOS
+    CYGWIN, FREEBSD, LINUX, MAC, MINGW, MSYS, OPENVMS, OS400, SOLARIS, TANDEM, WINDOWS, ZOS
 }
 
 data class CommandLine(var args: List<String> = emptyList(), var dir: String = "", var os: Set<Os> = emptySet(),
