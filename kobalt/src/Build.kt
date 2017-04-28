@@ -1,10 +1,16 @@
 
-import com.beust.kobalt.*
+import com.beust.kobalt.buildScript
+import com.beust.kobalt.file
 import com.beust.kobalt.plugin.packaging.assemble
 import com.beust.kobalt.plugin.publish.autoGitTag
 import com.beust.kobalt.plugin.publish.bintray
+import com.beust.kobalt.profile
+import com.beust.kobalt.project
 import net.thauvin.erik.kobalt.plugin.versioneye.versionEye
-import org.apache.maven.model.*
+import org.apache.maven.model.Developer
+import org.apache.maven.model.License
+import org.apache.maven.model.Model
+import org.apache.maven.model.Scm
 
 val bs = buildScript {
     repos(file("K:/maven/repository"))
@@ -19,7 +25,7 @@ val p = project {
     name = "kobalt-exec"
     group = "net.thauvin.erik"
     artifactId = name
-    version = "0.6.5"
+    version = "0.6.6"
 
     pom = Model().apply {
         description = "Command Line Execution plug-in for the Kobalt build system."
@@ -41,7 +47,7 @@ val p = project {
     }
 
     dependencies {
-        compile("com.beust:$kobaltDependency:")
+        compileOnly("com.beust:$kobaltDependency:")
     }
 
     dependenciesTest {

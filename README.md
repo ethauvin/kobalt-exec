@@ -17,7 +17,7 @@ val p = project {
     name = "example"
 
     exec {
-       commandLine(listOf("echo", "Hello, World!"))
+       commandLine("echo", "Hello, World!")
     }
 }
 ```
@@ -35,9 +35,9 @@ The `commandLine` directive is used to execute command line(s) during the build 
 
 ```kotlin
 exec {
-    commandLine(listOf("cmd", "/c", "stop.bat"), dir = "../tomcat/bin", os = setOf(Os.WINDOWS))
-    commandLine(listOf("./stop.sh"), dir = "../tomcat/bin", os = setOf(Os.MAC, Os.LINUX))
-    commandLine(listOf("/bin/sh", "-c", "ps aux | grep tomcat"), fail = setOf(Fail.EXIT))
+    commandLine("cmd", "/c", "stop.bat", dir = "../tomcat/bin", os = setOf(Os.WINDOWS))
+    commandLine("./stop.sh", dir = "../tomcat/bin", os = setOf(Os.MAC, Os.LINUX))
+    commandLine("/bin/sh", "-c", "ps aux | grep tomcat", fail = setOf(Fail.EXIT))
 }
 ```
 
@@ -45,12 +45,13 @@ exec {
 
 ### `args`
 
-The full command line including the executable and all parameters.
+The full command line arguments including the executable and all parameters.
 
 ```kotlin
 exec {
-    commandLine(listOf("ls", "-l"))
-    commandLine(args = listOf("cmd", "/c", "dir /Q"))
+    commandLine(args="ls")
+    commandLine("ls", "-l")
+    commandLine("cmd", "/c", "dir /Q")
 }
 ```
 
@@ -60,7 +61,7 @@ The working directory in which the command should be executed. Defaults to the p
 
 ```kotlin
 exec {
-    commandLine(listOf("cmd", "/c", "stop.bat"), dir = "../tomcat/bin")
+    commandLine("cmd", "/c", "stop.bat", dir = "../tomcat/bin")
     commandLine("./stop.sh", dir = "../tomcat/bin")
 }
 ```
@@ -85,8 +86,8 @@ Name          | Operating System
 
 ```kotlin
 exec {
-    commandLine(listOf("cmd", "/c", "stop.cmd"), os = setOf(Os.WINDOWS))
-    commandLine(listOf("./stop.sh"), os = setOf(Os.LINUX, Os.MAC))
+    commandLine("cmd", "/c", "stop.cmd", os = setOf(Os.WINDOWS))
+    commandLine("./stop.sh", os = setOf(Os.LINUX, Os.MAC))
 }
 ```
 
@@ -110,8 +111,41 @@ Name          | Failure When
 
 ```kotlin
 exec {
-    commandLine(listOf("cmd", "/c", "stop.bat"), fail = setOf(Fail.EXIT))
-    commandLine(listOf("./stop.sh"), fail = setOf(Fail.EXIT, Fail.STDOUT))
+    commandLine("cmd", "/c", "stop.bat", fail = setOf(Fail.EXIT))
+    commandLine("./stop.sh", fail = setOf(Fail.EXIT, Fail.STDOUT))
+}
+```
+
+## taskName
+
+Additionally, you can specify a task name to easily identify multiple `exec` directives.
+
+```kotlin
+exec {
+    taskName = "start"
+    commandLine("./start.sh", os = setOf(Os.LINUX, Os.MAC))
+}
+
+exec {
+    taskName = "stop"
+    commandLine("./stop.sh", os = setOf(Os.LINUX, Os.MAC))
+}
+```
+
+```shell
+./kobaltw start
+./kobaltw stop
+```
+
+## dependsOn
+
+
+By default the `exec` task depends on `assemble`, use the `dependsOn` parameter to change the dependencies:
+
+```kotlin
+exec {
+    dependsOn = listOf("assemble", "run")
+    commandLine("cmd", "/c", "start.bat", fail = setOf(Fail.EXIT))
 }
 ```
 
@@ -125,8 +159,8 @@ You could also redirect the error stream to a file:
 
 ```kotlin
 exec {
-    commandLine(listOf("/bin/sh", "-c", "./stop.sh 2> error.txt"), os = setOf(Os.LINUX))
-    commandLine(listOf("cmd", "/c", "stop.bat 2> error.txt"), os = setOf(Os.WINDOWS))
+    commandLine("/bin/sh", "-c", "./stop.sh 2> error.txt", os = setOf(Os.LINUX))
+    commandLine("cmd", "/c", "stop.bat 2> error.txt", os = setOf(Os.WINDOWS))
 }
 ```
 

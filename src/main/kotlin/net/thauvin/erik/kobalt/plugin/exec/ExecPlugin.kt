@@ -44,8 +44,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Singleton
-class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
-        BasePlugin(), ITaskContributor, IConfigActor<ExecConfig> by configActor {
+class ExecPlugin @Inject constructor(val taskContributor: TaskContributor, val configActor: ConfigsActor<ExecConfig>) :
+        BasePlugin(), ITaskContributor, IConfigsActor<ExecConfig> by configActor {
     // ITaskContributor
     override fun tasksFor(project: Project, context: KobaltContext): List<DynamicTask> {
         return emptyList()
@@ -57,14 +57,19 @@ class ExecPlugin @Inject constructor(val configActor: ConfigActor<ExecConfig>) :
 
     override val name = NAME
 
-    @Suppress("unused")
-    @Task(name = "exec", description = "Execute a command line process.")
-    fun taskExec(project: Project): TaskResult {
-        configurationFor(project)?.let { config ->
-            return executeCommands(project, config)
+    override fun apply(project: Project, context: KobaltContext) {
+        configurationFor(project)?.let { configs ->
+            configs.forEach { config ->
+                taskManager.addTask(this, project, config.taskName,
+                        description = "Execute a command line process.",
+                        group = "Other",
+                        dependsOn = config.dependsOn,
+                        task = { executeCommands(project, config) })
+                taskContributor.addVariantTasks(this, project, context, config.taskName,
+                        dependsOn = config.dependsOn,
+                        runTask = { executeCommands(project, config) })
+            }
         }
-
-        return TaskResult()
     }
 
     private fun matchOs(os: Os): Boolean {
@@ -187,12 +192,14 @@ data class CommandLine(var args: List<String> = emptyList(), var dir: String = "
 
 @Directive
 class ExecConfig {
+    var taskName: String = "exec"
     val commandLines = arrayListOf<CommandLine>()
+    var dependsOn = listOf("assemble")
 
     @Suppress("unused")
-    fun commandLine(args: List<String> = emptyList(), dir: String = "", os: Set<Os> = emptySet(),
+    fun commandLine(vararg args: String, dir: String = "", os: Set<Os> = emptySet(),
                     fail: Set<Fail> = setOf(Fail.NORMAL)) {
-        if (args.isNotEmpty()) commandLines.add(CommandLine(args, dir, os, fail))
+        if (args.isNotEmpty()) commandLines.add(CommandLine(listOf(*args), dir, os, fail))
     }
 }
 

@@ -3,13 +3,14 @@ import com.beust.kobalt.plugin.application.*
 import com.beust.kobalt.plugin.packaging.*
 import net.thauvin.erik.kobalt.plugin.exec.*
 
+// ./kobaltw exec echo ps --log 2
 // ./kobaltw exec --log 2
-// ./kobaltw example:exec --log 2
-// ./kobaltw example2:exec --log 2
+// ./kobaltw echo --log 2
+// ./kobaltw ps --log 2
 
 val bs = buildScript {
-    //repos(file("K:/maven/repository"))
-    plugins("net.thauvin.erik:kobalt-exec:")
+    repos(file("K:/maven/repository"))
+    plugins("net.thauvin.erik:kobalt-exec:0.6.6")
 }
 
 val example = project {
@@ -29,20 +30,23 @@ val example = project {
     }
 
     exec {
-        commandLine(listOf("echo", "Test Example 1"), os = setOf(Os.LINUX))
-        commandLine(listOf("cmd", "/c", "echo", "Test Example 1"), os = setOf(Os.WINDOWS))
-        commandLine(args = listOf("ls", "-l"), dir = "../libs", os = setOf(Os.LINUX))
-        commandLine(args = listOf("cmd", "/c", "dir /Q"), dir = "../libs", os = setOf(Os.WINDOWS))
+        commandLine("echo", "Test Example 1", os = setOf(Os.LINUX))
+        commandLine("cmd", "/c", "echo", "Test Example 1", os = setOf(Os.WINDOWS))
+        commandLine("ls", "-l", dir = "../libs", os = setOf(Os.LINUX))
+        commandLine("cmd", "/c", "dir /Q", dir = "../libs", os = setOf(Os.WINDOWS))
     }
-}
-
-val example2 = project {
-    name = "example2"
 
     exec {
-        commandLine(listOf("cmd", "/c", "echo", "Test Example 2"), os = setOf(Os.WINDOWS))
-        commandLine(listOf("echo", "Test example 2"), os = setOf(Os.LINUX))
-        //commandLine(listOf("cmd", "/c", "tasklist | find \"cmd.exe\""), os = setOf(Os.WINDOWS), fail = setOf(Fail.NONE))
-        commandLine(listOf("/bin/sh", "-c", "ps aux | grep bash"), os = setOf(Os.LINUX))
+        taskName = "echo"
+        dependsOn = listOf("exec", "run")
+        commandLine("cmd", "/c", "echo", "Test Example 2", os = setOf(Os.WINDOWS))
+        commandLine("echo", "Test example 2", os = setOf(Os.LINUX))
+    }
+
+    exec {
+        taskName = "ps"
+        dependsOn = listOf() // no dependencies
+        commandLine("cmd", "/c", "tasklist | find \"cmd.exe\"", os = setOf(Os.WINDOWS), fail = setOf(Fail.NONE))
+        commandLine("/bin/sh", "-c", "ps aux | grep bash", os = setOf(Os.LINUX))
     }
 }
