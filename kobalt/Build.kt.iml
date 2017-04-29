@@ -10,32 +10,33 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
-      <library name="Kobalt: kobalt-versioneye-0.4.4.jar">
+      <library name="Kobalt: kobalt-versioneye-0.4.5.jar">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/cache/net/thauvin/erik/kobalt-versioneye/0.4.4/kobalt-versioneye-0.4.4.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/cache/net/thauvin/erik/kobalt-versioneye/0.4.5/kobalt-versioneye-0.4.5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Kobalt: com.beust.kobalt:kobalt:jar:1.0.26">
+      <library name="Kobalt: com.beust.kobalt:kobalt:jar:1.0.80">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.26/kobalt/wrapper/kobalt-1.0.26.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.80/kobalt/wrapper/kobalt-1.0.80.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.80/kobalt/wrapper/kobalt-1.0.80-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Kobalt: kobalt-exec-0.6.3.jar">
+      <library name="Kobalt: kobalt-maven-local-0.5.3.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../kobaltBuild/libs/kobalt-exec-0.6.3.jar!/" />
+          <root url="jar://$USER_HOME$/.kobalt/cache/net/thauvin/erik/kobalt-maven-local/0.5.3/kobalt-maven-local-0.5.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
   </component>
 </module>
