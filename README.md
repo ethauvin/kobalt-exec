@@ -49,7 +49,7 @@ The full command line including the executable and all arguments.
 
 ```kotlin
 exec {
-    commandLine(args="ls")
+    commandLine(args = "ls")
     commandLine("ls", "-l")
     commandLine("cmd", "/c", "dir /Q")
 }
