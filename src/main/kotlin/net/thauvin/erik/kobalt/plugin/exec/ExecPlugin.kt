@@ -72,6 +72,27 @@ class ExecPlugin @Inject constructor(val taskContributor: TaskContributor, val c
         }
     }
 
+    private fun isCygwin(): Boolean {
+        val path: String? = System.getenv("ORIGINAL_PATH")
+        return path?.contains("/cygdrive/") ?: false
+    }
+
+    private fun isMinGW(os: Os = Os.MINGW, any: Boolean = false): Boolean {
+        val msys: String? = System.getenv("MSYSTEM")
+
+        if (!msys.isNullOrBlank()) {
+            if (any) {
+                return true
+            } else if (os.equals(Os.MSYS)) {
+                return msys!!.startsWith("MSYS")
+            } else if (os.equals(Os.MINGW)) {
+                return msys!!.startsWith("MINGW")
+            }
+        }
+
+        return false
+    }
+
     private fun matchOs(os: Os): Boolean {
         val curOs: String = System.getProperty("os.name").toLowerCase(Locale.US)
         when (os) {
@@ -116,27 +137,6 @@ class ExecPlugin @Inject constructor(val taskContributor: TaskContributor, val c
                 return isMinGW(Os.MSYS)
             }
         }
-    }
-
-    private fun isCygwin() : Boolean {
-        val path: String? = System.getenv("ORIGINAL_PATH")
-        return path?.contains("/cygdrive/") ?: false
-    }
-
-    private fun isMinGW(os: Os = Os.MINGW, any: Boolean = false) : Boolean {
-       val msys: String? = System.getenv("MSYSTEM")
-
-        if (!msys.isNullOrBlank()) {
-            if (any) {
-                return true
-            } else if (os.equals(Os.MSYS)) {
-                return msys!!.startsWith("MSYS")
-            } else if (os.equals(Os.MINGW)) {
-                return msys!!.startsWith("MINGW")
-            }
-        }
-
-        return false
     }
 
     private fun executeCommands(project: Project, config: ExecConfig): TaskResult {
