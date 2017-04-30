@@ -30,8 +30,6 @@ val example = project {
     }
 
     exec {
-        commandLine("echo", "Test Example 1", os = setOf(Os.LINUX, Os.MINGW, Os.CYGWIN))
-        commandLine("cmd", "/c", "echo", "Test", "Example", "1", os = setOf(Os.WINDOWS))
         commandLine("ls", "-l", dir = "../kobalt/wrapper", os = setOf(Os.LINUX, Os.MINGW, Os.CYGWIN))
         commandLine("cmd", "/c", "dir /Q", dir = "../kobalt/wrapper", os = setOf(Os.WINDOWS))
     }
@@ -40,7 +38,7 @@ val example = project {
         taskName = "echo"
         dependsOn = listOf("exec", "run")
 
-        val echo = arrayOf("echo", "Test", "Example", "2")
+        val echo = arrayOf("echo", "Test", "Example")
         commandLine("cmd", "/c", *echo, os = setOf(Os.WINDOWS))
         commandLine(*echo, os = setOf(Os.LINUX, Os.MINGW, Os.CYGWIN))
     }
@@ -49,6 +47,6 @@ val example = project {
         taskName = "ps"
         dependsOn = listOf() // no dependencies
         commandLine("cmd", "/c", "tasklist | find \"cmd.exe\"", os = setOf(Os.WINDOWS), fail = setOf(Fail.NONE))
-        commandLine("/bin/sh", "-c", "ps aux | grep bash", os = setOf(Os.LINUX))
+        commandLine("sh", "-c", "ps aux | grep bash", os = setOf(Os.LINUX, Os.MINGW, Os.CYGWIN))
     }
 }

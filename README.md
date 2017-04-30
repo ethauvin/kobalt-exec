@@ -84,8 +84,10 @@ Name          | Operating System
 `Os.OS400`    | OS/400
 `Os.SOLARIS`  | Solaris / SunOS
 `Os.TANDEM`   | Tandem's Non-Stop
-`Os.WINDOWS`  | Microsoft Windows
+`Os.WINDOWS`  | Microsoft Windows*
 `Os.ZOS`      | z/OS / OS/390
+
+<sub>* Not including Cygwin, MinGW or MSYS.</sub>
 
 ```kotlin
 exec {
@@ -135,7 +137,7 @@ exec {
 }
 ```
 
-```shell
+```sh
 ./kobaltw start
 ./kobaltw stop
 ```
@@ -155,6 +157,7 @@ exec {
 ## Logging / Debugging
 
 To view the output of the `exec` task, use:
+
 ```sh
 ./kobaltw exec --log 2
 ```

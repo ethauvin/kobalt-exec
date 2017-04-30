@@ -76,7 +76,11 @@ class ExecPlugin @Inject constructor(val taskContributor: TaskContributor, val c
         val curOs: String = System.getProperty("os.name").toLowerCase(Locale.US)
         when (os) {
             Os.WINDOWS -> {
-                return curOs.contains("windows")
+                if (!isMinGW(any = true) && !isCygwin()) {
+                    return curOs.contains("windows")
+                } else {
+                    return false
+                }
             }
             Os.MAC -> {
                 return (curOs.contains("mac") || curOs.contains("darwin") || curOs.contains("osx"))
@@ -103,18 +107,36 @@ class ExecPlugin @Inject constructor(val taskContributor: TaskContributor, val c
                 return curOs.contains("os/400")
             }
             Os.CYGWIN -> {
-                val cygwin: String? = System.getenv("ORIGINAL_PATH")
-                return cygwin?.contains("/cygdrive/") ?: false
+                return isCygwin()
             }
             Os.MINGW -> {
-                val mingw: String? = System.getenv("MSYSTEM")
-                return mingw?.startsWith("MINGW") ?: false
+                return isMinGW()
             }
             Os.MSYS -> {
-                val msys: String? = System.getenv("MSYSTEM")
-                return msys?.startsWith("MSYS") ?: false
+                return isMinGW(Os.MSYS)
             }
         }
+    }
+
+    private fun isCygwin() : Boolean {
+        val path: String? = System.getenv("ORIGINAL_PATH")
+        return path?.contains("/cygdrive/") ?: false
+    }
+
+    private fun isMinGW(os: Os = Os.MINGW, any: Boolean = false) : Boolean {
+       val msys: String? = System.getenv("MSYSTEM")
+
+        if (!msys.isNullOrBlank()) {
+            if (any) {
+                return true
+            } else if (os.equals(Os.MSYS)) {
+                return msys!!.startsWith("MSYS")
+            } else if (os.equals(Os.MINGW)) {
+                return msys!!.startsWith("MINGW")
+            }
+        }
+
+        return false
     }
 
     private fun executeCommands(project: Project, config: ExecConfig): TaskResult {
@@ -132,7 +154,7 @@ class ExecPlugin @Inject constructor(val taskContributor: TaskContributor, val c
                     }
                 }
                 if (execute) {
-                    log(2, "> " + args.joinToString(" "))
+                    log(2, (if (!wrkDir.name.equals(".")) wrkDir.name else "") + "> " + args.joinToString(" "))
                     val pb = ProcessBuilder().command(args.toList())
                     pb.directory(wrkDir)
                     val proc = pb.start()
