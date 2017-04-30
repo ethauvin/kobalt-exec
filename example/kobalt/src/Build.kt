@@ -9,8 +9,8 @@ import net.thauvin.erik.kobalt.plugin.exec.*
 // ./kobaltw ps --log 2
 
 val bs = buildScript {
-    repos(file("K:/maven/repository"))
-    plugins("net.thauvin.erik:kobalt-exec:0.6.6")
+    //repos(file("K:/maven/repository"))
+    plugins("net.thauvin.erik:kobalt-exec:")
 }
 
 val example = project {
