@@ -37,7 +37,7 @@ The `commandLine` directive is used to execute command line(s) during the build 
 exec {
     commandLine("cmd", "/c", "stop.bat", dir = "../tomcat/bin", os = setOf(Os.WINDOWS))
     commandLine("./stop.sh", dir = "../tomcat/bin", os = setOf(Os.MAC, Os.LINUX))
-    commandLine("/bin/sh", "-c", "ps aux | grep tomcat", fail = setOf(Fail.EXIT))
+    commandLine("sh", "-c", "ps aux | grep tomcat", fail = setOf(Fail.EXIT))
 }
 ```
 
@@ -73,13 +73,13 @@ List of operating systems on which the command may be executed. If the current O
 The following predefined values are available:
 
 Name          | Operating System
---------------|-----------------------
-`Os.CYGWIN`   | Cygwin
+:-------------|:-------------------------
+`Os.CYGWIN`   | Cygwin for Windows
 `Os.FREEBSD`  | FreeBSD
 `Os.LINUX`    | Linux
 `Os.MAC`      | Apple Macintosh / OS X
 `Os.MINGW`    | Minimalist GNU for Windows
-`OS.MSYS`     | MSYS
+`OS.MSYS`     | MinGW Minimal System
 `Os.OPENVMS`  | OpenVMS
 `Os.OS400`    | OS/400
 `Os.SOLARIS`  | Solaris / SunOS
@@ -91,7 +91,7 @@ Name          | Operating System
 
 ```kotlin
 exec {
-    commandLine("cmd", "/c", "stop.cmd", os = setOf(Os.WINDOWS))
+    commandLine("cmd", "/c", "stop.bat", os = setOf(Os.WINDOWS))
     commandLine("./stop.sh", os = setOf(Os.LINUX, Os.MAC))
 }
 ```
@@ -103,7 +103,7 @@ List of error options to specify whether data returned to the standard streams a
 The following predefined values are available:
 
 Name          | Failure When
---------------|-----------------------------------------------------------------
+:-------------|:----------------------------------------------------------------
 `Fail.EXIT`   | Exit value > 0
 `Fail.NORMAL` | Exit value > 0 or any data to the standard error stream (stderr)
 `Fail.OUTPUT` | Any data to the standard output stream (stdout) or stderr.
