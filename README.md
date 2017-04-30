@@ -88,7 +88,7 @@ Name          | Operating System
 `Os.WINDOWS`  | Microsoft Windows*
 `Os.ZOS`      | z/OS / OS/390
 
-<sub>* Not including Cygwin, MinGW or MSYS.</sub>
+<sub>* Excluding Cygwin, MinGW and MSYS.</sub>
 
 ```kotlin
 exec {
