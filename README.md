@@ -37,7 +37,8 @@ The `commandLine` directive is used to execute command line(s) during the build 
 exec {
     commandLine("cmd", "/c", "stop.bat", dir = "../tomcat/bin", os = setOf(Os.WINDOWS))
     commandLine("./stop.sh", dir = "../tomcat/bin", os = setOf(Os.MAC, Os.LINUX))
-    commandLine("sh", "-c", "ps aux | grep tomcat", fail = setOf(Fail.EXIT))
+    commandLine("sh", "-c", "ps aux | grep tomcat", os = setOf(Os.MAC, Os.LINUX), fail = setOf(Fail.EXIT))
+    commandLine("cmd", "/c", "tasklist | find \"tomcat\"", os = setOf(Os.WINDOWS), fail = setOf(Fail.EXIT))
 }
 ```
 
@@ -165,7 +166,7 @@ You could also redirect the error stream to a file:
 
 ```kotlin
 exec {
-    commandLine("/bin/sh", "-c", "./stop.sh 2> error.txt", os = setOf(Os.LINUX))
+    commandLine("sh", "-c", "./stop.sh 2> error.txt", os = setOf(Os.LINUX))
     commandLine("cmd", "/c", "stop.bat 2> error.txt", os = setOf(Os.WINDOWS))
 }
 ```
