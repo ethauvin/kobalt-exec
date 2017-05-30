@@ -1,5 +1,5 @@
-
 import com.beust.kobalt.buildScript
+import com.beust.kobalt.localMaven
 import com.beust.kobalt.file
 import com.beust.kobalt.plugin.packaging.assemble
 import com.beust.kobalt.plugin.publish.autoGitTag
@@ -13,7 +13,7 @@ import org.apache.maven.model.Model
 import org.apache.maven.model.Scm
 
 val bs = buildScript {
-    repos(file("K:/maven/repository"))
+    repos(localMaven())
     plugins("net.thauvin.erik:kobalt-versioneye:", "net.thauvin.erik:kobalt-maven-local:")
 }
 
@@ -47,11 +47,13 @@ val p = project {
     }
 
     dependencies {
-        compileOnly("com.beust:$kobaltDependency:")
+        compile("com.beust:$kobaltDependency:")
+        compile("org.jetbrains.kotlin:kotlin-stdlib:1.1.2-4")
     }
 
     dependenciesTest {
         compile("org.testng:testng:")
+        compile("org.jetbrains.kotlin:kotlin-test:1.1.2-4")
     }
 
     assemble {
