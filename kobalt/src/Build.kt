@@ -48,12 +48,12 @@ val p = project {
 
     dependencies {
         compile("com.beust:$kobaltDependency:")
-        compile("org.jetbrains.kotlin:kotlin-stdlib:1.1.2-4")
+        compile("org.jetbrains.kotlin:kotlin-stdlib:1.1.51")
     }
 
     dependenciesTest {
-        compile("org.testng:testng:")
-        compile("org.jetbrains.kotlin:kotlin-test:1.1.2-4")
+        compile("org.testng:testng:6.12")
+        compile("org.jetbrains.kotlin:kotlin-test:1.1.51")
     }
 
     assemble {
@@ -64,6 +64,7 @@ val p = project {
 
     autoGitTag {
         enabled = true
+        push = false
         message = "Version $version"
     }
 
